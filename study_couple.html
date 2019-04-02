@@ -22,13 +22,13 @@ li {list-style-type:none;}
 <div  class="class_member">
     <h3>의민반</h3>
 	<ul class="members">
-		<li>일수민</li>
+		<!-- <li>일수민</li>
 		<li>이수길</li>
 		<li>삼수고</li>
 		<li>사수로</li>
 		<li>오수길</li>
 		<li>육수송</li>
-		<li>칠수나</li>
+		<li>칠수나</li> -->
 	</ul>
     <a href="" class="go">짝 만들기.</a>
     <ul class="couple">
@@ -38,84 +38,91 @@ li {list-style-type:none;}
 <script>
 
 // 데이터 준비
-var 요청URL = "https://raw.githubusercontent.com/eulsoo/ud/066c431b54d2ee2cf26a1fb8db82b4b0664e3aa5/js_level1/tab_5_data.json";
+var 요청URL = "https://raw.githubusercontent.com/eulsoo/classtool/master/student.json";
 
 var 요청객체 = new XMLHttpRequest();
 요청객체.open("GET", 요청URL);
 요청객체.responseType = "json";
 요청객체.send();
 요청객체.onload = function () {
-    var 탭메뉴json = 요청객체.response;
-    tabmenu(탭메뉴json);
+    var 의민반 = 요청객체.response;
+    console.log(의민반);
+    classtool(의민반);
 }
 
+function classtool(의민반) {
+    console.log(의민반)
+    var memberElem = document.querySelectorAll(".class_member li");
+    var memberBtn = document.querySelector(".class_member a");
 
-var memberElem = document.querySelectorAll(".class_member li");
-var memberBtn = document.querySelector(".class_member a");
-
-var lStudent = [];
-var 짝기록 = {};
-var 짝 = [];
-
-for (let i = 0; i < memberElem.length; i++) {
-	lStudent[i] = memberElem[i].textContent;
-    짝기록[lStudent[i]] = [];
-}
-
-memberBtn.addEventListener("click", 짝만들기);
-function 짝만들기(e) {
-    e.preventDefault();
+    var lStudent = [];
+    var 짝기록 = {};
+    var 짝 = [];
 
     for (let i = 0; i < memberElem.length; i++) {
         lStudent[i] = memberElem[i].textContent;
+        짝기록[lStudent[i]] = [];
     }
 
-    roof();
+    memberBtn.addEventListener("click", 짝만들기);
+    function 짝만들기(e) {
+        e.preventDefault();
 
-    function roof() {
-        if (lStudent.length === 0) {
-            return;
+        for (let i = 0; i < memberElem.length; i++) {
+            lStudent[i] = memberElem[i].textContent;
         }
-        var meeting = [];
-        meeting.push(lStudent[0]); // 미팅장소로 보낸다
-        lStudent.splice(0, 1); // 원래그룹에서는 뺀다
 
-        for (var j = 0; j < lStudent.length; j++) {
-            if ( 짝했었나(meeting[0], lStudent[j]) ) {
-                continue;
-            } else {
-                meeting.push(lStudent[j]);
-                짝기록[meeting[0]].push(lStudent[j]);
-                짝기록[lStudent[j]].push(meeting[0]);
-                lStudent.splice(j, 1);
-                break;
+        roof();
+
+        function roof() {
+            if (lStudent.length === 0) {
+                return;
             }
-        }
-        짝.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
-        roof(); // 다시 시작한다.
-    }
+            var meeting = [];
+            meeting.push(lStudent[0]); // 미팅장소로 보낸다
+            lStudent.splice(0, 1); // 원래그룹에서는 뺀다
 
-    function 짝했었나(leftMan, rightMan) {
-        if (!짝기록[leftMan] || 짝기록[rightMan]) {
+            for (var j = 0; j < lStudent.length; j++) {
+                if (짝했었나(meeting[0], lStudent[j])) {
+                    continue;
+                } else {
+                    meeting.push(lStudent[j]);
+                    짝기록[meeting[0]].push(lStudent[j]);
+                    짝기록[lStudent[j]].push(meeting[0]);
+                    lStudent.splice(j, 1);
+                    break;
+                }
+            }
+            짝.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
+            roof(); // 다시 시작한다.
+        }
+
+        function 짝했었나(leftMan, rightMan) {
+            if (!짝기록[leftMan] || 짝기록[rightMan]) {
+                return false;
+            }
+            for (var i = 0; i < 짝기록[leftMan].length; i++) {
+                if (짝기록[leftMan][i] === rightMan) {
+                    return true;
+                }
+            }
             return false;
         }
-        for (var i = 0; i < 짝기록[leftMan].length; i++) {
-            if (짝기록[leftMan][i] === rightMan) {
-                return true;
-            }
+
+        function showCouple() {
+            var coupleElem = douct
         }
-        return false;
+        for (let i = 0; i < 짝.length; i++) {
+            console.log(짝[i][0] + ":" + 짝[i][1]);
+        }
+        console.log(짝);
+        짝 = [];
     }
 
-    function showCouple() {
-        var coupleElem = douct
-    }
-	for (let i = 0; i < 짝.length; i++) {
-		console.log(짝[i][0] + ":" + 짝[i][1]);
-	}
-	console.log(짝);
-	짝 = [];
+
 }
+
+
 
 </script>
 </body>
