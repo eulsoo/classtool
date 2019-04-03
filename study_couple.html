@@ -45,78 +45,73 @@ var 요청객체 = new XMLHttpRequest();
 요청객체.responseType = "json";
 요청객체.send();
 요청객체.onload = function () {
-    var 의민반 = 요청객체.response;
-    console.log(의민반);
-    classtool(의민반);
+    var students = 요청객체.response;
+    classtool(students);
 }
 
-function classtool(의민반) {
-    console.log(의민반)
-    var memberElem = document.querySelectorAll(".class_member li");
-    var memberBtn = document.querySelector(".class_member a");
+function classtool(students) {
+    var targetMembers = students.의민반.member;
+    var coupled = students.의민반.coupled;
+    var ulElem = document.querySelector(".members");
+    var nowCouple = [];
 
-    var lStudent = [];
-    var 짝기록 = {};
-    var 짝 = [];
-
-    for (let i = 0; i < memberElem.length; i++) {
-        lStudent[i] = memberElem[i].textContent;
-        짝기록[lStudent[i]] = [];
+    for (let i = 0; i < targetMembers.length; i++) {
+        var liElem = document.createElement("li");
+        var liName = document.createTextNode(targetMembers[i]);
+        liElem.appendChild(liName);
+        ulElem.appendChild(liElem);
     }
-
-    memberBtn.addEventListener("click", 짝만들기);
-    function 짝만들기(e) {
+    
+    document.querySelector(".class_member > .go").addEventListener("click", makeCouple);
+    function makeCouple(e) {
         e.preventDefault();
-
-        for (let i = 0; i < memberElem.length; i++) {
-            lStudent[i] = memberElem[i].textContent;
-        }
 
         roof();
 
         function roof() {
-            if (lStudent.length === 0) {
+            if (targetMembers.length === 0) {
                 return;
             }
             var meeting = [];
-            meeting.push(lStudent[0]); // 미팅장소로 보낸다
-            lStudent.splice(0, 1); // 원래그룹에서는 뺀다
+            meeting.push(targetMembers[0]); // 미팅장소로 보낸다
+            targetMembers.splice(0, 1); // 원래그룹에서는 뺀다
 
-            for (var j = 0; j < lStudent.length; j++) {
-                if (짝했었나(meeting[0], lStudent[j])) {
+            for (let i = 0; i < targetMembers.length; i++) {
+                if (wasCouple(meeting[0], targetMembers[i])) {
                     continue;
                 } else {
-                    meeting.push(lStudent[j]);
-                    짝기록[meeting[0]].push(lStudent[j]);
-                    짝기록[lStudent[j]].push(meeting[0]);
-                    lStudent.splice(j, 1);
+                    meeting.push(targetMembers[i]);
+                    coupled[meeting[0]].push(targetMembers[i]);
+                    coupled[targetMembers[i]].push(meeting[0]);
+                    targetMembers.splice(i, 1);
                     break;
                 }
             }
-            짝.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
+            nowCouple.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
             roof(); // 다시 시작한다.
         }
 
-        function 짝했었나(leftMan, rightMan) {
-            if (!짝기록[leftMan] || 짝기록[rightMan]) {
-                return false;
-            }
-            for (var i = 0; i < 짝기록[leftMan].length; i++) {
-                if (짝기록[leftMan][i] === rightMan) {
+        function wasCouple(leftMan, rightMan) {
+            // if (coupled[leftMan].length === 0 && coupled[rightMan].length ===0 ) {
+            //     console.log("짝없었음");
+            //     return false;
+            // }
+            for (let i = 0; i < coupled[leftMan].length; i++) {
+                if (coupled[leftMan][i] === rightMan) {
                     return true;
+                } else {
+                    return false;
                 }
             }
-            return false;
         }
 
-        function showCouple() {
-            var coupleElem = douct
+        for (let i = 0; i < nowCouple.length; i++) {
+            console.log(nowCouple[i][0] + ":" + nowCouple[i][1]);
         }
-        for (let i = 0; i < 짝.length; i++) {
-            console.log(짝[i][0] + ":" + 짝[i][1]);
-        }
-        console.log(짝);
-        짝 = [];
+        console.log(nowCouple);
+        console.log(coupled);
+        console.log(targetMembers);
+        nowCouple = [];
     }
 
 
