@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>스터디 커플 메이커</title>
+<link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR:300,400,700" rel="stylesheet">
+<style media="all">
+body {padding:40px; font-family: 'Noto Serif KR', serif;}
+* {margin:0; padding:0}
+li {list-style-type:none;}
+.wrap {min-width:1000px; width:80%; margin:0 auto}
+h1 {text-align: center; margin:30px 0; font-weight: normal;}
+h1 > span + span {margin-left:110px; position: relative;}
+h1 > span + span:before {content:""; background-color:red; height:10px; position:absolute; width:80px; left:-95px; top:45%; border-radius:5px;}
+.class_member {position: relative; padding:20px; }
+.class_member:after {content:''; position:absolute; bottom:-8px; left:0; right:0; height:8px; background-color: black; border-radius:4px;}
+.class_member + .class_member {margin-top:30px}
+.class_member .members {margin-bottom:20px;}
+.class_member .members > li {float:left; font-size:20px; }
+.class_member h3 {font-weight: 700; margin-bottom:10px; font-size: 16px; letter-spacing: 2px; color:red}
+.class_member .members > li {margin-right:20px; position: relative;}
+.class_member .members > li:after {content:''; position: absolute; width:4px; height:4px; background-color:lime; border-radius:2px; right:-12px; top:15px;}
+.class_member .members > li:last-child:after {display: none;}
+.class_member .members:after {clear:both; content:''; display:block;}
+.class_member .go {padding:10px; font-size:20px; position: absolute; right:40px; top:30px; bottom:0; margin:auto 0; text-decoration-color:lime; color:rgb(187, 73, 20); height:30px}
+.class_member .mate {overflow:hidden}
+.class_member .mate > li {float:left; width:140px; margin:0 20px 20px 0; }
+.class_member .mate > li > h4 {margin:3px 10px 5px 0; font-size:12px; width:60px; color:red}
+.class_member .mate > li > .item {width:130px; padding:0 5px; background-color: #e4e4e4; border-radius:5px; float:left; text-align: center; font-size: 16px; line-height:30px;  margin-bottom:10px; font-weight: 400}
+.class_member .mate > li > .item.none {background-color:lime}
+.print {position:fixed; right:30px; top:30px; text-align: center; color:black; text-decoration: none; font-size: 22px; text-decoration-color: chartreuse; text-decoration-line: line-through;}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1><span>내</span><span>짝</span></h1>
+    <a href="" class="print" onclick="print();">인쇄하기</a>
+</div>
+<script>
+
+
+// 반과 학생을 입력하는 곳
+var targetStudents = {
+    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    희민반 : ["이수희", "삼수희", "사수희", "오수희", "육수희", "전지민", "김길도", "강길삼", "남원태", "김태영", "고수길", "가성비", "똑똑해", "김동해", "고봉길", "정을수", "김삼삼", "가동동", "고동동"],
+    반1: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    반2: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    반3: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    반4: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    반5: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"],
+    반6: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "강동원", "전승희", "김해일", "방배성", "김동우"]
+}
+
+// 객체 만들기
+var students = {}
+for (let className in targetStudents) {
+    students[className] = {};
+    students[className].member = [];
+    targetStudents[className].forEach(function(item) {
+        students[className].member.push(item);
+    });
+    students[className].coupled = {};
+    targetStudents[className].forEach(function (item) {
+        students[className].coupled[item] = [];
+    });
+
+    classtool(className);
+}
+
+// students 객체 샘플
+// var students = {
+//     "의민반": {
+//         "member": ["일수민", "이수길", "삼수고", "사수로", "오수길", "육수송", "칠수나"],
+//         "coupled": {
+//             "일수민": [],
+//             "이수길": [],
+//             "삼수고": [],
+//             "사수로": [],
+//             "오수길": [],
+//             "육수송": [],
+//             "칠수나": []
+//         }
+//     }
+// }
+function classtool(className) {
+    // 준비 
+    var coupled = students[className].coupled;
+    var classCouple = [];
+    var nowCouple = [];
+    
+    readyStart();
+    // 홀짝 조건에 따라 총 몇회를 커플링해야 할지를 결정하고 커플링을 실행함.
+    // 그리고 홀짝 조건에 따라 filterShow를 실행해줌.
+    function readyStart() {
+        coupled = students[className].coupled;
+        classCouple = [];
+        nowCouple = [];
+
+        // 홀수, 짝수일때 셋팅
+        var oddEven;
+        var activeNum = students[className].member.length;
+        if (students[className].member.length % 2 === 0) {
+            oddEven = "even";
+            activeNum -= 1;
+        } else {
+            oddEven = "odd";
+        }
+        // 총회수만큼 실행
+        for (let i = 0; i < activeNum; i++) {
+            classCouple[i] = makeCouple(oddEven);
+        }
+               
+        // 최대의 커플링을 위한 랜덤 반복실행을 위해 커플들 초기화 함.
+        for (var item in students[className].coupled) {
+            students[className].coupled[item] = [];
+        }
+        filterShow(oddEven); // 홀짝 조건에 따라 화면에 보이기
+    }
+
+    // 한 회차에 대한 커플링 로직을 갖는다. 처리가 끝나면 최종 커플결과를
+    // classCouple에 배열로 넣어줌.
+    
+    function makeCouple(targetMembers) { 
+        var targetMembers = students[className].member.slice();
+        shuffle(targetMembers); // 1회에 한번씩 섞는다.
+        var nowCouple = [];
+
+        // 한 커플을 만들기 위한 대상자를 훑는다.
+        while (targetMembers.length > 0 ) { 
+            // 대상자를 모두 처리해서 배열이 비면 끝냄.
+            var meeting = [];
+            meeting[0] = targetMembers[0]; // 항상 첫번째 대상을 미팅장소로 보낸다
+            targetMembers.splice(0, 1) // 그리고 그룹에서 뺀다
+
+            // 대상의 파트너를 찾기위해 훑는다.
+            for (let j = 0; j < targetMembers.length; j++) { 
+                // 현재 파트너와 짝했던적이 있었으면 다음 파트너로 넘기고, 아니면 파트너가 됨.
+                if (wasCouple(meeting[0], targetMembers[j])) {
+                    continue;
+                } else {
+                    meeting[1] = targetMembers[j]; // 미팅장소로 파트너를 보냄
+                    coupled[meeting[0]] = targetMembers[j]; //짝했다고 기록
+                    coupled[targetMembers[j]] = meeting[0]; //짝했다고 기록
+                    targetMembers.splice(j, 1); // 그룹에서 짝이된 파트너를 지움
+                    break;
+                }
+            }
+            nowCouple.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
+        } // roof end --
+
+        // 최종짝들중에 undefined가 있으면 "짝없음"
+        for (let i = 0; i < nowCouple.length; i++) {
+            if (nowCouple[i][1] === undefined) {
+                nowCouple[i][1] = "짝없음";
+            }
+        }
+        // requestIdleCallback(makeCouple);
+        return nowCouple; // 커플들을 리턴
+    } // makeCouple end --
+
+    // 최대한의 커플을 만들기 위해 홀짝별로 반복 실행을 해서 
+    // 가장 좋은 결과를 보여줌.
+    function filterShow(oddEven) {
+        for (var item in students[className].coupled) {
+            students[className].coupled[item] = [];
+        }
+
+        var countNone = 0;
+        var setCount;
+        if (oddEven === "odd") {
+            setCount = students[className].member.length;
+        } else {
+            setCount = 0;
+        }
+        classCouple.forEach(function (item, index) {
+            for (let i = 0; i < item.length; i++) {
+                if (item[i][1] === "짝없음") {
+                    countNone += 1;
+                }
+            }
+        });
+
+        if (countNone === setCount) {
+            showMate();// 홀짝 조건에 따라 화면에 보이기
+            
+        } else {
+            readyStart();
+        }
+        
+    }
+    
+    // 화면에 보여줌.
+    function showMate() {
+        var wrap = document.querySelector(".wrap");
+        var classH3 = document.createElement("h3");
+        var classMember = document.createElement("div");
+        classH3.innerText = className;
+        classMember.setAttribute("class", "class_member");
+        classMember.appendChild(classH3);
+        wrap.appendChild(classMember);
+
+        // 학생리스트 노드 만들기
+        var ulElem = document.createElement("ul");
+        ulElem.setAttribute("class", "members");
+        classMember.appendChild(ulElem);
+
+        for (let i = 0; i < students[className].member.length; i++) {
+            var liElem = document.createElement("li");
+            var liName = document.createTextNode(students[className].member[i]);
+            liElem.appendChild(liName);
+            ulElem.appendChild(liElem);
+        }
+
+        // 짝리스트 노드 만들기
+        var mateUlElem = document.createElement("ul");
+        mateUlElem.setAttribute("class", "mate");
+        classMember.appendChild(mateUlElem);
+        for (let i = 0; i < classCouple.length; i++) {
+            var mateLiElem = document.createElement("li");
+            var mateH4 = document.createElement("h4");
+            mateH4.innerHTML = (i + 1) + " 회차 짝";
+            mateLiElem.appendChild(mateH4);
+            mateUlElem.appendChild(mateLiElem);
+
+            for (let j = 0; j < classCouple[i].length; j++) {
+                var mateItem = document.createElement("div");
+                mateItem.setAttribute("class", "item")
+
+                if (classCouple[i][j][1] === "짝없음") {
+                    mateItem.classList.add("none");
+                } 
+                mateItem.innerHTML = "<span>" + classCouple[i][j][0] + " -- </span><span>" + classCouple[i][j][1] + "</span>";
+
+                mateLiElem.appendChild(mateItem);
+            }
+        }
+    }
+
+    // 커플했었는지 검사
+    function wasCouple(leftMan, rightMan) {
+        for (let i = 0; i < coupled[leftMan].length; i++) {
+            if (coupled[leftMan][i] === rightMan) { // 짝했었는지 검사
+                return true;
+            } else { // 아니면 다음으로 넘겨서 다시 짝검사
+                continue;
+            }
+        }
+        return false; // 한번도 안했으면 false반환
+    }
+
+    // 그룹 배열 섞기
+    function shuffle(arr) {
+        var j, x;
+        for (let i = arr.length; i; i -= 1) {
+            j = Math.floor(Math.random() * i);
+            x = arr[i - 1];
+            arr[i - 1] = arr[j];
+            arr[j] = x;
+        }
+    }
+    
+}
+
+
+
+</script>
+</body>
+</html>
+
+
+
