@@ -42,7 +42,7 @@ h1 > span + span:before {content:""; background-color:red; height:10px; position
 
 // 반과 학생을 입력하는 곳
 var targetStudents = {
-    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "정상태", "김규승"],
+    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "박 신", "최다영", "홍길동", "정상태"],
     희민반 : ["이수희", "삼수희", "사수희", "오수희", "육수희"]
 }
 
@@ -128,6 +128,7 @@ function classtool(className) {
 
             // 대상의 파트너를 찾기위해 훑는다.
             for (let j = 0; j < targetMembers.length; j++) { 
+                
                 // 현재 파트너와 짝했던적이 있었으면 다음 파트너로 넘기고, 아니면 파트너가 됨.
                 if (wasCouple(meeting[0], targetMembers[j])) {
                     continue;
@@ -232,6 +233,7 @@ function classtool(className) {
 
     // 커플했었는지 검사
     function wasCouple(leftMan, rightMan) {
+        console.log(coupled);
         for (let i = 0; i < coupled[leftMan].length; i++) {
             if (coupled[leftMan][i] === rightMan) { // 짝했었는지 검사
                 return true;
