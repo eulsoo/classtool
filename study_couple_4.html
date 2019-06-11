@@ -51,7 +51,6 @@ var changeQueue = (function () {
         dequeue: function () {
             var o = list[index];
             index++;
-
             return o;
         },
 
@@ -61,9 +60,16 @@ var changeQueue = (function () {
     }
 })();
 
-// 반과 학생을 입력하는 곳
+// 반과 학생을 입력하는 곳. - 13명 이내로 입력하시고 넘을시에는 2반으로 나눠서 입력해 주세요.
 var targetStudents = {
-    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "장한나", "김미옥", "김현아", "마석진"]
+    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "장한나", "김미옥", "김현아", "마석진"],
+
+    반영반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "장한나", "김미옥", "김현아", "마석진"],
+
+    김부반1 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나"],
+
+    김부반2: ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우"],
+
 }
 
 // 객체 만들기
@@ -135,7 +141,7 @@ function classtool(className) {
 
     // 한 회차에 대한 커플링 로직을 갖는다. 처리가 끝나면 최종 커플결과를
     // classCouple에 배열로 넣어줌.
-    function makeCouple(targetMembers) {
+    function makeCouple() {
         var targetMembers = students[className].member.slice();
         // shuffle(targetMembers);
         let y, x; // 1회에 한번씩 섞는다.
@@ -265,7 +271,6 @@ function classtool(className) {
                     mateItem.classList.add("none");
                 } 
                 mateItem.innerHTML = "<span>" + classCouple[i][j][0] + " -- </span><span>" + classCouple[i][j][1] + "</span>";
-
                 mateLiElem.appendChild(mateItem);
             }
         }
@@ -283,16 +288,6 @@ function classtool(className) {
         return false; // 한번도 안했으면 false반환
     }
 
-    // 그룹 배열 섞기
-    // function shuffle(arr) {
-    //     var j, x;
-    //     for (let i = arr.length; i; i -= 1) {
-    //         j = Math.floor(Math.random() * i);
-    //         x = arr[i - 1];
-    //         arr[i - 1] = arr[j];
-    //         arr[j] = x;
-    //     }
-    // }
 }
 
 

@@ -63,7 +63,7 @@ var changeQueue = (function () {
 
 // 반과 학생을 입력하는 곳
 var targetStudents = {
-    지혜반 : ["정의민", "박예린", "한승민", "지영현", "손유진", "윤시우", "류한나", "장태현", "김혜림", "장한나", "김미옥", "김현아", "마석진"]
+    지혜반 : ["정의민", "박예린", "한승민"]
 }
 
 // 객체 만들기
@@ -113,9 +113,10 @@ function classtool(className) {
         for (var item in students[className].coupled) {
             students[className].coupled[item] = [];
         }
-        filterShow(oddEven); // 1회에 한번씩 섞는다.
+        
+        showMate(); // 1회에 한번씩 섞는다.
         // 홀짝 조건에 따라 화면에 보이기
-       
+       console.log("ok2")
     }
 
     function processChanges(deadline, obj) {
@@ -135,9 +136,9 @@ function classtool(className) {
 
     // 한 회차에 대한 커플링 로직을 갖는다. 처리가 끝나면 최종 커플결과를
     // classCouple에 배열로 넣어줌.
-    function makeCouple(targetMembers) {
+    function makeCouple(oddEven) {
         var targetMembers = students[className].member.slice();
-        // shuffle(targetMembers);
+
         let y, x; // 1회에 한번씩 섞는다.
         for (let i = targetMembers.length; i; i -= 1) {
             y = Math.floor(Math.random() * i);
@@ -147,9 +148,7 @@ function classtool(className) {
         }
 
         var nowCouple = [];
-
         // 한 커플을 만들기 위한 대상자를 훑는다.
-        
         for (let i = 0; i < targetMembers.length; i++) {
             if (targetMembers[i] === null) {
                 continue;
@@ -180,13 +179,32 @@ function classtool(className) {
             nowCouple.push(meeting); // 미팅된 커플을 최종 짝으로 보낸다.
         }
 
+        
+        let noneCount = 0;
         // 최종짝들중에 undefined가 있으면 "짝없음"
         for (let i = 0; i < nowCouple.length; i++) {
             if (nowCouple[i][1] === undefined) {
                 nowCouple[i][1] = "짝없음";
+                noneCount += 1;
             }
         }
+        
+
+        if (oddEven === "even") {
+            if (noneCount !== 0) {
+                makeCouple("even");
+            }
+        } else if (oddEven === "odd") {
+            if (noneCount !== 1) {
+                makeCouple("odd");
+            }
+        }
+        console.log(oddEven)
+        console.log(noneCount)
+        console.log("ok!")
+        console.log(nowCouple)
         return nowCouple; // 커플들을 리턴
+         
     } // makeCouple end --
 
     // 최대한의 커플을 만들기 위해 홀짝별로 반복 실행을 해서 
@@ -204,24 +222,22 @@ function classtool(className) {
             setCount = 0;
         }
 
-        for (let i = 0; i < classCouple.length; i++) {
-            for (let j = 0; j < classCouple[i].length; j++) {
-                if (classCouple[i][j][1] === "짝없음") {
-                    countNone += 1;
-                }
-            }
-        }
+        // for (let i = 0; i < classCouple.length; i++) {
+        //     for (let j = 0; j < classCouple[i].length; j++) {
+        //         if (classCouple[i][j][1] === "짝없음") {
+        //             countNone += 1;
+        //         }
+        //     }
+        // }
 
-        if (countNone === setCount) {
-            showMate();
-        } else {
-            changeQueue.enqueue({
-                execute: function () {
-                    readyStart();
-                }
-            });
-            requestIdleCallback(processChanges);
-        }
+        
+        // changeQueue.enqueue({
+        //     execute: function () {
+        //         showMate();
+        //     }
+        // });
+        // requestIdleCallback(processChanges);
+
     }
     
     // 화면에 보여줌.
